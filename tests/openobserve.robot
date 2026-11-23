@@ -18,6 +18,15 @@ Configure OpenObserve
 Check Web Response
     Wait Until Keyword Succeeds    3 min    5 sec    Check Health
 
+Recover Module Volumes
+    ${rc}=    Execute Command    runagent -m ${module_id} module-dump-state    return_stdout=False    return_rc=True
+    Should Be Equal As Integers    ${rc}    0
+    ${rc}=    Execute Command
+    ...    runagent -m ${module_id} bash -ec 'test -s openobserve-data.tar && systemctl --user stop openobserve.service && podman volume rm openobserve-data && "$AGENT_INSTALL_DIR/actions/restore-module/40restore_volume" && systemctl --user start openobserve.service'
+    ...    return_stdout=False    return_rc=True
+    Should Be Equal As Integers    ${rc}    0
+    Wait Until Keyword Succeeds    5 min    5 sec    Check Health
+
 Remove OpenObserve
     ${rc}=    Execute Command    remove-module --no-preserve ${module_id}    return_stdout=False    return_rc=True
     Should Be Equal As Integers    ${rc}    0
