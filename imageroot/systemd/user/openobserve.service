@@ -11,6 +11,7 @@ Restart=on-failure
 TimeoutStartSec=180
 TimeoutStopSec=90
 ExecStart=/usr/bin/podman run --replace --name openobserve-app --sdnotify=conmon --cgroups=no-conmon --publish 127.0.0.1:${TCP_PORT}:5080 --env-file=%E/state/openobserve.env --volume openobserve-data:/data:Z ${OPENOBSERVE_IMAGE}
+ExecStartPost=/usr/bin/timeout 110 /usr/bin/bash -c 'until curl -fsS "http://127.0.0.1:${TCP_PORT}/healthz" >/dev/null; do sleep 2; done'
 ExecStop=/usr/bin/podman stop --ignore -t 60 openobserve-app
 ExecStopPost=/usr/bin/podman rm --ignore -f openobserve-app
 
