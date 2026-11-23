@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+exec 1>&2
+systemctl --user stop openobserve.service
+podman volume create --ignore openobserve-data >/dev/null
+podman unshare bash -ec '
+    path=$(podman volume mount openobserve-data)
+    if [[ -n $(find "$path" -mindepth 1 -maxdepth 1 -print -quit) ]]; then
+        echo "Restore requires an empty OpenObserve data volume" >&2
+        exit 1
+    fi
+    tar --numeric-owner -C "$path" -xpf "$1"
+' bash "$PWD/openobserve-data.tar"
+rm -f openobserve-data.tar

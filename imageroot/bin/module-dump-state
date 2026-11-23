@@ -1,11 +1,16 @@
 #!/bin/bash
-
-#
-# Copyright (C) 2022 Nethesis S.r.l.
-# SPDX-License-Identifier: GPL-3.0-or-later
-#
-
-set -e
-
-echo "Dumping kickstart postgres database"
-podman exec postgresql-app pg_dump -U postgres --format=c  kickstart > kickstart.pg_dump
+set -euo pipefail
+umask 077
+running=false
+if systemctl --user is-active --quiet openobserve.service; then running=true; fi
+finish() {
+    status=$?
+    rm -f "${tempfile:-}"
+    if "$running"; then systemctl --user start openobserve.service || status=1; fi
+    exit "$status"
+}
+trap finish EXIT
+if "$running"; then systemctl --user stop openobserve.service; fi
+tempfile=$(mktemp -p "$PWD")
+podman unshare bash -ec 'tar --numeric-owner -C "$(podman volume mount openobserve-data)" -cpf "$1" .' bash "$tempfile"
+mv -f "$tempfile" openobserve-data.tar
