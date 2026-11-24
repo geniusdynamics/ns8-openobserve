@@ -8,9 +8,10 @@
 import agent
 import os
 
-configure_retval = agent.tasks.run(agent_id=os.environ['AGENT_ID'], action='configure-module', data={
-    "lets_encrypt": os.environ["TRAEFIK_LETS_ENCRYPT"] == "True",
+# Never clone lets_encrypt: DNS may not point to the new node yet.
+ret = agent.tasks.run(agent_id=os.environ['AGENT_ID'], action='configure-module', data={
     "host": os.environ["TRAEFIK_HOST"],
-    "http2https": os.environ["TRAEFIK_HTTP2HTTPS"] == "True",
+    "http2https": os.environ.get("TRAEFIK_HTTP2HTTPS", "True").lower() == "true",
+    "lets_encrypt": False,
 })
-agent.assert_exp(configure_retval['exit_code'] == 0, "The configure-module subtask failed!")
+agent.assert_exp(ret['exit_code'] == 0, "The configure-module subtask failed!")

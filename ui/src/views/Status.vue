@@ -136,6 +136,36 @@
         />
       </cv-column>
     </cv-row>
+    <cv-row>
+      <cv-column class="page-subtitle">
+        <h4>{{ $t("status.access_title") }}</h4>
+      </cv-column>
+    </cv-row>
+    <cv-row>
+      <cv-column>
+        <cv-tile light>
+          <p class="mg-bottom-sm">{{ $t("status.credentials_help") }}</p>
+          <NsCodeSnippet
+            :copyTooltip="core.$t('common.copy_to_clipboard')"
+            :copied-tooltip="core.$t('common.copied_to_clipboard')"
+            :wrap-text="true"
+            hideExpandButton
+            >runagent -m {{ instanceName }} openobserve-initial-credentials</NsCodeSnippet
+          >
+          <p v-if="host" class="mg-bottom-sm">
+            {{ $t("status.ingestion_help", { host: host }) }}
+          </p>
+          <NsCodeSnippet
+            v-if="host"
+            :copyTooltip="core.$t('common.copy_to_clipboard')"
+            :copied-tooltip="core.$t('common.copied_to_clipboard')"
+            :wrap-text="true"
+            hideExpandButton
+            >https://{{ host }}/api/default/v1/logs</NsCodeSnippet
+          >
+        </cv-tile>
+      </cv-column>
+    </cv-row>
     <!-- services -->
     <cv-row>
       <cv-column class="page-subtitle">

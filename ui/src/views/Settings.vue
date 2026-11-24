@@ -23,16 +23,15 @@
       <cv-column>
         <cv-tile light>
           <cv-form @submit.prevent="configureModule">
-            <cv-text-input
+            <NsTextInput
               :label="$t('settings.openobserve_fqdn')"
-              placeholder="openobserve.example.org"
+              :placeholder="$t('settings.host_placeholder')"
               v-model.trim="host"
               class="mg-bottom"
               :invalid-message="$t(error.host)"
               :disabled="loading.getConfiguration || loading.configureModule"
               ref="host"
-            >
-            </cv-text-input>
+            />
             <NsToggle
               value="letsEncrypt"
               :label="core.$t('apps_lets_encrypt.request_https_certificate')"
@@ -80,7 +79,7 @@
                 />
               </cv-column>
             </cv-row>
-            <cv-toggle
+            <NsToggle
               value="httpToHttps"
               :label="$t('settings.http_to_https')"
               v-model="isHttpToHttpsEnabled"
@@ -93,14 +92,13 @@
               <template slot="text-right">{{
                 $t("settings.enabled")
               }}</template>
-            </cv-toggle>
-            <!-- advanced options -->
-            <cv-accordion ref="accordion" class="maxwidth mg-bottom">
-              <cv-accordion-item :open="toggleAccordion[0]">
-                <template slot="title">{{ $t("settings.advanced") }}</template>
-                <template slot="content"> </template>
-              </cv-accordion-item>
-            </cv-accordion>
+            </NsToggle>
+            <NsInlineNotification
+              kind="info"
+              :title="$t('settings.credentials_title')"
+              :description="$t('settings.credentials_description', { instance: instanceName })"
+              :showCloseButton="false"
+            />
             <cv-row v-if="error.configureModule">
               <cv-column>
                 <NsInlineNotification
@@ -203,7 +201,7 @@ export default {
         host: "",
         lets_encrypt: "",
         http2https: "",
-        getStatus: false,
+        getStatus: "",
       },
     };
   },
@@ -365,8 +363,6 @@ export default {
       }
     },
     async configureModule() {
-      this.error.test_imap = false;
-      this.error.test_smtp = false;
       const isValidationOk = this.validateConfigureModule();
       if (!isValidationOk) {
         return;
@@ -440,7 +436,4 @@ export default {
   margin-bottom: $spacing-06;
 }
 
-.maxwidth {
-  max-width: 38rem;
-}
 </style>

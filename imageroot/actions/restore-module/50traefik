@@ -10,11 +10,12 @@ import json
 import agent
 import os
 
-request = json.load(sys.stdin)
-renv = request['environment']
+renv = json.load(sys.stdin)['environment']
 
-configure_retval = agent.tasks.run(agent_id=os.environ['AGENT_ID'], action='configure-module', data={
+# Never restore lets_encrypt: DNS may not point to this node yet.
+ret = agent.tasks.run(agent_id=os.environ['AGENT_ID'], action='configure-module', data={
     "host": renv["TRAEFIK_HOST"],
-    "http2https": renv["TRAEFIK_HTTP2HTTPS"] == "True",
+    "http2https": renv.get("TRAEFIK_HTTP2HTTPS", "True").lower() == "true",
+    "lets_encrypt": False,
 })
-agent.assert_exp(configure_retval['exit_code'] == 0, "The configure-module subtask failed!")
+agent.assert_exp(ret['exit_code'] == 0, "The configure-module subtask failed!")
