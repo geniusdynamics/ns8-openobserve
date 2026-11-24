@@ -5,22 +5,20 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-#
-# Read configuration
-#
-
 import os
 import sys
 import json
 import agent
 
-# Prepare return variable
 config = {}
+config["host"] = os.getenv("TRAEFIK_HOST", "")
+config["http2https"] = os.getenv("TRAEFIK_HTTP2HTTPS", "True").lower() == "true"
+try:
+    config["lets_encrypt"] = bool(agent.get_route(os.environ['MODULE_ID']).get('lets_encrypt', False))
+except Exception as ex:
+    print(agent.SD_WARNING + f"Cannot read the Traefik route: {ex}", file=sys.stderr)
+    config["lets_encrypt"] = False
+# Never return secrets: only report whether they exist
+config["root_credentials_set"] = os.path.isfile(os.path.join(os.environ["AGENT_STATE_DIR"], "openobserve.env"))
 
-# Read current configuration from the environment file
-config["host"] = os.getenv("TRAEFIK_HOST","")
-config["http2https"] = os.getenv("TRAEFIK_HTTP2HTTPS") == "True"
-config["lets_encrypt"] = agent.get_route(os.environ['MODULE_ID']).get('lets_encrypt', False)
-
-# Dump the configuration to stdout
 json.dump(config, fp=sys.stdout)

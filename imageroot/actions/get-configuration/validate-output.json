@@ -1,20 +1,22 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Get openobserve settings",
-    "$id": "http://nethserver.org/json-schema/task/input/openobserve/get-configuration",
-    "description": "Get openobserve settings",
+    "title": "Get OpenObserve settings",
+    "$id": "http://nethserver.org/json-schema/task/output/openobserve/get-configuration",
+    "description": "Get OpenObserve settings",
     "examples": [
         {
             "host": "openobserve.domain.org",
             "http2https": true,
-            "lets_encrypt": true
+            "lets_encrypt": true,
+            "root_credentials_set": true
         }
     ],
     "type": "object",
     "required": [
         "host",
         "http2https",
-        "lets_encrypt"
+        "lets_encrypt",
+        "root_credentials_set"
     ],
     "properties": {
         "host": {
@@ -31,6 +33,11 @@
             "type": "boolean",
             "title": "HTTP to HTTPS redirection",
             "description": "Redirect all the HTTP requests to HTTPS"
+        },
+        "root_credentials_set": {
+            "type": "boolean",
+            "title": "Root credentials set",
+            "description": "True when the initial root credentials exist in the module state; the value is never returned"
         }
     }
 }

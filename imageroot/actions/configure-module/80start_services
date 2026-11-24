@@ -1,4 +1,5 @@
 #!/bin/bash
 set -e
 exec 1>&2
-systemctl --user enable --now openobserve.service
+systemctl --user enable openobserve.service
+systemctl --user restart openobserve.service

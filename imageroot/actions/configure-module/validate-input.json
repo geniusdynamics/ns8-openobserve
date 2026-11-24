@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Configure openobserve",
+    "title": "Configure OpenObserve",
     "$id": "http://nethserver.org/json-schema/task/input/openobserve/configure-module",
-    "description": "Configure openobserve",
+    "description": "Configure OpenObserve",
     "examples": [
         {
             "host": "openobserve.domain.org",

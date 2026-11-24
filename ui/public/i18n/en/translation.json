@@ -1,7 +1,6 @@
 {
   "common": {
     "required": "Required",
-    "work_in_progress": "Work in progress",
     "processing": "Processing..."
   },
   "status": {
@@ -19,26 +18,29 @@
     "no_services": "No services",
     "no_images": "No images",
     "no_volumes": "No volumes",
-    "openobserve_webapp": "openobserve webapp",
+    "openobserve_webapp": "OpenObserve web app",
     "not_configured": "Not configured",
-    "open_webapp": "Open openobserve",
-    "configure": "Configure"
+    "open_webapp": "Open OpenObserve",
+    "configure": "Configure",
+    "access_title": "Access and ingestion",
+    "credentials_help": "The initial administrator credentials are stored on the node. Run this command as root to display them:",
+    "ingestion_help": "Send OTLP logs, metrics and traces to https://{host}/api/default/ using HTTP basic authentication. OTLP logs endpoint:"
   },
   "settings": {
     "title": "Settings",
-    "configure_instance": "Configure {instance}",
     "save": "Save",
-    "openobserve_fqdn": "openobserve hostname (FQDN)",
-    "lets_encrypt": "Request LE Certificate",
+    "openobserve_fqdn": "OpenObserve hostname (FQDN)",
     "http_to_https": "Force HTTPS",
     "enabled": "Enabled",
     "disabled": "Disabled",
-    "advanced": "Advanced",
     "configuring": "Configuring",
-    "instance_configuration": "Configure openobserve",
-    "domain_already_used_in_traefik": "Domain already used in traefik",
+    "instance_configuration": "Configure OpenObserve",
+    "domain_already_used_in_traefik": "Domain already used in Traefik",
     "host_pattern": "Must be a valid fully qualified domain name",
-    "host_format": "Must be a valid fully qualified domain name"
+    "host_format": "Must be a valid fully qualified domain name",
+    "host_placeholder": "openobserve.example.org",
+    "credentials_title": "Administrator credentials",
+    "credentials_description": "The initial credentials are not shown here. Run on the node: runagent -m {instance} openobserve-initial-credentials"
   },
   "about": {
     "title": "About"

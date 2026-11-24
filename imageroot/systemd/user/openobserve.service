@@ -5,12 +5,21 @@ After=network-online.target
 [Service]
 Type=notify
 NotifyAccess=all
-EnvironmentFile=%E/state/environment
-WorkingDirectory=%E/state
+EnvironmentFile=%S/state/environment
+WorkingDirectory=%S/state
 Restart=on-failure
+RestartSec=10
 TimeoutStartSec=180
 TimeoutStopSec=90
-ExecStart=/usr/bin/podman run --replace --name openobserve-app --sdnotify=conmon --cgroups=no-conmon --publish 127.0.0.1:${TCP_PORT}:5080 --env-file=%E/state/openobserve.env --volume openobserve-data:/data:Z ${OPENOBSERVE_IMAGE}
+ExecStart=/usr/bin/podman run --replace --name openobserve-app \
+    --sdnotify=conmon --cgroups=no-conmon \
+    --publish 127.0.0.1:${TCP_PORT}:5080 \
+    --env-file=%S/state/openobserve.env \
+    --env ZO_TELEMETRY=false \
+    --env ZO_DATA_DIR=/data \
+    --env ZO_MEMORY_CACHE_MAX_SIZE=512 \
+    --volume openobserve-data:/data:Z \
+    ${OPENOBSERVE_IMAGE}
 ExecStartPost=/usr/bin/timeout 110 /usr/bin/bash -c 'until curl -fsS "http://127.0.0.1:${TCP_PORT}/healthz" >/dev/null; do sleep 2; done'
 ExecStop=/usr/bin/podman stop --ignore -t 60 openobserve-app
 ExecStopPost=/usr/bin/podman rm --ignore -f openobserve-app
